@@ -55,10 +55,24 @@ Peça e Caixa
 
     4. Arquitetura
 
-> O sistema será desenvolvido inicialmente apenas com um back-end em JavaScript, concentrando-se exclusivamente na implementação e demonstração da lógica de negócio. Posteriormente, ele poderá evoluir para um sistema completo, com front-end, banco de dados, API e demais componentes necessários.
+> O sistema será desenvolvido inicialmente apenas com um back-end em JavaScript, concentrando-se exclusivamente na implementação e demonstração da lógica de negócio. Posteriormente, ele poderá evoluir para um sistema completo com front-end, banco de dados, API e demais componentes necessários.
 - Para este fim, a estrutura:
-`menu.js` - arquivo de interação com o usuário
-`pecas.js`; `caixas.js`; `relatorio.js` - arquivos para receber e devolver dados. 
+
+sistema_cadastro/
+├── `package.json`
+└── src/
+    ├── `index.js`       ← principal: só chama o menu
+    ├── `menu.js`        ← menu e interação com o usuário
+    ├── `config.js`      ← constantes
+    ├── `pecas.js`       ← regras das peças
+    ├── `caixas.js`      ← regras das caixas
+    └── `relatorio.js`   ← relatório
+
+- A princípio, começar com estrutura mais simples para verificar viabilidade de dividir as responsabilidades em arquivos específicos.
+
+sistema_cadastro/
+├── `package.json`
+└── `script.js`      ← principal: menu + regras, tudo junto
 
 </br>
 </br>
