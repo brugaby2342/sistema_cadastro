@@ -5,10 +5,10 @@
 import readline from "node:readline/promises"
 import { stdin as input, stdout as output } from "node:process"
 /*
-Se começasse com require, depois teria que trocar tudo para import. 
-O import/export é o jeito atual do JavaScript, usado tanto no navegador quanto no Node. 
+Se começasse com require, depois teria que trocar tudo para import.
+O import/export é o jeito atual do JavaScript, usado tanto no navegador quanto no Node.
 Quando fizer o index.html, vai usar import lá também.
-O package.json é a “certidão” do projeto. 
+O package.json é a “certidão” do projeto.
 Ele registra nome, versão, descrição, autora e comandos. Projetos de portfólio sem ele parecem incompletos.
 Ganha o comando npm start, que é o jeito padrão de rodar projetos Node.
 No package.json: "type": "module" é o que libera o import. Sem essa linha, o Node espera require.
@@ -24,24 +24,24 @@ TAMANHO: 10cm a 20cm
 CAIXA: 10 peças
 */
 
-const minWeight = 95 // gramas
-const maxWeight = 105
-const minLength = 10 // centímetros
-const maxLength = 20
-const validColors = new Set(["azul", "verde"])
-const boxCapacity = 10
+const MIN_WEIGHT = 95
+const MAX_WEIGHT = 105
+const MIN_LENGTH = 10
+const MAX_LENGTH = 20
+const VALID_COLORS = new Set(["azul", "verde"]) // itera sobre uma instância de Set
+const BOX_CAPACITY = 10
 
 // ---------- Estado do sistema (em memória) ----------
 
 const registeredParts = [] // todas as peças (aprovadas e reprovadas)
-const closedBoxes = [] // caixas já fechadas (cada caixa é um array de peças)
+const closedBoxes = [] // caixas já fechadas (cada caixa é um array 10 peças )
 let currentBox = [] // caixa em aberto
 
-// ---------- Leitura do teclado ----------
+// ---------- Entrada do menu ----------
 
 const rl = readline.createInterface({ input, output });
 
-// Pergunta até o usuário digitar um número válido. Aceita vírgula ou ponto.
+// Pergunta até o usuário digitar um número válido para o menu; await espera pela execução da promise da função assíncrona para retornar o valor
 async function askNumber(question) {
   while (true) {
     const answer = (await rl.question(question)).trim().replace(",", ".");
@@ -56,40 +56,41 @@ async function askNumber(question) {
 
 // ---------- Regras de negócio ----------
 
-// Função pura: recebe as medidas e devolve a lista de motivos de reprovação.
-// Lista vazia significa peça aprovada.
+// Peça não validada, devolve a lista de motivos de reprovação.
 function validatePart(weight, color, length) {
-  const reasons = [];
+  const reasons = []; // Lista vazia significa peça aprovada.
 
-  if (weight < minWeight || weight > maxWeight) {
+  if (weight < MIN_WEIGHT || weight > MAX_WEIGHT) {
     reasons.push(`Peso fora do padrão (${weight.toFixed(1)}g)`);
   }
-  if (!validColors.has(color)) {
+  if (!VALID_COLORS.has(color)) {
     reasons.push(`Cor inválida (${color})`);
   }
-  if (length < minLength || length > maxLength) {
+  if (length < MIN_LENGTH || length > MAX_LENGTH) {
     reasons.push(`Comprimento fora do padrão (${length.toFixed(1)}cm)`);
   }
 
   return reasons;
 }
 
-// Coloca a peça na caixa atual; se a caixa encher, fecha e abre outra.
+// Adiciona peça na caixa atualmente aberta, fecha se estiver cheia e abre nova.
 function addToBox(part) {
   currentBox.push(part);
 
-  if (currentBox.length === boxCapacity) {
-    closedBoxes.push([...currentBox]); // guarda uma cópia da caixa cheia
+  if (currentBox.length === BOX_CAPACITY) {
+    // spread: cria um array novo e independente, com as mesmas referências de peças. Arquiva.
+    closedBoxes.push([...currentBox]);
+    // a caixa antiga é descartada; currentBox aponta para uma nova e vazia.
     currentBox = [];
   }
 }
 
-// Esvazia todas as caixas e redistribui as peças aprovadas, na ordem de cadastro.
+// Quando uma peça é removida, as caixas ficam com um buraco no meio. Esvazia todas as caixas e redistribui as peças aprovadas, na ordem de cadastro.
 function reorganizeBoxes() {
   closedBoxes.length = 0; // esvazia o array
   currentBox = [];
 
-  for (const part of registeredParts) {
+  for (const part of registeredParts) { // itera na ordem de inserção
     if (part.status === "Aprovada") {
       addToBox(part);
     }
@@ -154,7 +155,7 @@ function listParts() {
     const color = part.color.charAt(0).toUpperCase() + part.color.slice(1);
 
     console.log(`ID: ${part.id} | Status: ${part.status}`);
-    console.log(`Medidas: ${part.weight.toFixed(1)}g, ${color}, ${part.length.toFixed(1)}cm`);
+    console.log(`Características: ${part.weight.toFixed(1)}g, ${part.length.toFixed(1)}cm na cor ${color}, `);
     if (part.reasons.length > 0) {
       console.log(`  Falhas encontradas: ${part.reasons.join(", ")}`);
     }
@@ -165,6 +166,7 @@ async function removePart() {
   const id = (await rl.question("Digite o ID da peça que você deseja remover: ")).trim();
   const index = registeredParts.findIndex((part) => part.id === id);
 
+// Quando não encontra
   if (index === -1) {
     console.log(`Peça ID ${id} não encontrada.`);
     return;
@@ -183,17 +185,18 @@ function listBoxes() {
   }
 
   closedBoxes.forEach((box, index) => {
+    // extrai os IDs e junta numa string legível
     const ids = box.map((part) => part.id).join(", ");
     console.log(`📦 Caixa ${index + 1} (fechada) — peças: ${ids}`);
   });
 
-  console.log(`Caixa atual (em aberto): ${currentBox.length}/${boxCapacity} peças.`);
+  console.log(`Caixa atual (em aberto): ${currentBox.length}/${BOX_CAPACITY} peças.`);
 }
 
 function generateReport() {
   const approved = registeredParts.filter((part) => part.status === "Aprovada").length;
   const rejected = registeredParts.length - approved;
-  const usedBoxes = closedBoxes.length + (currentBox.length > 0 ? 1 : 0);
+  const usedBoxes = closedBoxes.length + (currentBox.length > 0 ? 1 : 0); // caixa aberta com alguma peça dentro também conta como caixa utilizada 
 
   // Conta quantas vezes cada motivo de reprovação aparece
   const reasonCounter = {};
@@ -240,7 +243,7 @@ async function main() {
 
     const action = OPTIONS[option];
     if (action) {
-      await action(); // o await funciona tanto para funções async quanto para as comuns
+      await action(); 
     } else {
       console.log("Opção inválida. Tente novamente.");
     }
