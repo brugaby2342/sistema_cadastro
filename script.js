@@ -17,6 +17,7 @@ import {
   addToBox,
   reorganizeBoxes,
 } from "./src/boxes.js";
+import { generateReport } from "./src/report.js";
 
 // ---------- Entrada do menu ----------
 
@@ -123,28 +124,18 @@ function listBoxes() {
   console.log(`Caixa atual (em aberto): ${currentBox.length}/${BOX_CAPACITY} peças.`);
 }
 
-function generateReport() {
-  const approved = registeredParts.filter((part) => part.status === "Aprovada").length;
-  const rejected = registeredParts.length - approved;
-  const usedBoxes = closedBoxes.length + (currentBox.length > 0 ? 1 : 0); // caixa aberta com alguma peça dentro também conta como caixa utilizada 
-
-  // Conta quantas vezes cada motivo de reprovação aparece
-  const reasonCounter = {};
-  for (const part of registeredParts) {
-    for (const reason of part.reasons) {
-      reasonCounter[reason] = (reasonCounter[reason] || 0) + 1;
-    }
-  }
+function showReport() {
+  const report = generateReport();
 
   console.log("RELATÓRIO FINAL:");
-  console.log(`Total de peças cadastradas: ${registeredParts.length}`);
-  console.log(`✔ Total de peças aprovadas: ${approved}`);
-  console.log(`✘ Total de peças reprovadas: ${rejected}`);
-  console.log(`📦 Total de caixas utilizadas (fechadas e em uso): ${usedBoxes}`);
+  console.log(`Total de peças cadastradas: ${report.total}`);
+  console.log(`✔ Total de peças aprovadas: ${report.approved}`);
+  console.log(`✘ Total de peças reprovadas: ${report.rejected}`);
+  console.log(`📦 Total de caixas utilizadas (fechadas e em uso): ${report.usedBoxes}`);
 
-  if (rejected > 0) {
+  if (report.rejected > 0) {
     console.log("Os motivos para reprovação registrados são:");
-    for (const [reason, count] of Object.entries(reasonCounter)) {
+    for (const [reason, count] of Object.entries(report.reasonCounter)) {
       console.log(`${reason}: ${count} vez(es)`);
     }
   }
@@ -158,7 +149,7 @@ const OPTIONS = {
   "2": listParts,
   "3": askRemovePart,
   "4": listBoxes,
-  "5": generateReport,
+  "5": showReport,
 };
 
 async function main() {
