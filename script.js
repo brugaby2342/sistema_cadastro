@@ -4,32 +4,16 @@
 
 import readline from "node:readline/promises"
 import { stdin as input, stdout as output } from "node:process"
-/*
-Se começasse com require, depois teria que trocar tudo para import.
-O import/export é o jeito atual do JavaScript, usado tanto no navegador quanto no Node.
-Quando fizer o index.html, vai usar import lá também.
-O package.json é a “certidão” do projeto.
-Ele registra nome, versão, descrição, autora e comandos. Projetos de portfólio sem ele parecem incompletos.
-Ganha o comando npm start, que é o jeito padrão de rodar projetos Node.
-No package.json: "type": "module" é o que libera o import. Sem essa linha, o Node espera require.
-"scripts": { "start": ... } faz o npm start rodar o programa.
-*/
 
-// ---------- Constantes (critérios de qualidade) ----------
 
-/*
-PESO: 95g a 105g
-COR: azul ou verde
-TAMANHO: 10cm a 20cm
-CAIXA: 10 peças
-*/
-
-const MIN_WEIGHT = 95
-const MAX_WEIGHT = 105
-const MIN_LENGTH = 10
-const MAX_LENGTH = 20
-const VALID_COLORS = new Set(["azul", "verde"]) // itera sobre uma instância de Set
-const BOX_CAPACITY = 10
+import {
+  MIN_WEIGHT,
+  MAX_WEIGHT,
+  MIN_LENGTH,
+  MAX_LENGTH,
+  VALID_COLORS,
+  BOX_CAPACITY,
+} from "./src/config.js";
 
 // ---------- Estado do sistema (em memória) ----------
 
