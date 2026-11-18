@@ -6,18 +6,16 @@ import readline from "node:readline/promises"
 import { stdin as input, stdout as output } from "node:process"
 
 
+import { BOX_CAPACITY } from "./src/config.js";
 import {
-  MIN_WEIGHT,
-  MAX_WEIGHT,
-  MIN_LENGTH,
-  MAX_LENGTH,
-  VALID_COLORS,
-  BOX_CAPACITY,
-} from "./src/config.js";
+  registeredParts,
+  partExists,
+  createPart,
+  removePart,
+} from "./src/parts.js";
 
 // ---------- Estado do sistema (em memória) ----------
 
-const registeredParts = [] // todas as peças (aprovadas e reprovadas)
 const closedBoxes = [] // caixas já fechadas (cada caixa é um array 10 peças )
 let currentBox = [] // caixa em aberto
 
@@ -36,25 +34,6 @@ async function askNumber(question) {
     }
     console.log("Valor inválido. Digite um número.");
   }
-}
-
-// ---------- Regras de negócio ----------
-
-// Peça não validada, devolve a lista de motivos de reprovação.
-function validatePart(weight, color, length) {
-  const reasons = []; // Lista vazia significa peça aprovada.
-
-  if (weight < MIN_WEIGHT || weight > MAX_WEIGHT) {
-    reasons.push(`Peso fora do padrão (${weight.toFixed(1)}g)`);
-  }
-  if (!VALID_COLORS.has(color)) {
-    reasons.push(`Cor inválida (${color})`);
-  }
-  if (length < MIN_LENGTH || length > MAX_LENGTH) {
-    reasons.push(`Comprimento fora do padrão (${length.toFixed(1)}cm)`);
-  }
-
-  return reasons;
 }
 
 // Adiciona peça na caixa atualmente aberta, fecha se estiver cheia e abre nova.
@@ -101,7 +80,7 @@ async function registerPart() {
     console.log("O ID não pode ficar vazio. Cadastro cancelado.");
     return;
   }
-  if (registeredParts.some((part) => part.id === id)) {
+  if (partExists(id)) {
     console.log(`Já existe uma peça com o ID ${id}. Cadastro cancelado.`);
     return;
   }
@@ -110,19 +89,15 @@ async function registerPart() {
   const color = (await rl.question("Digite a cor da peça: ")).trim().toLowerCase();
   const length = await askNumber("Digite o comprimento da peça (cm): ");
 
-  const reasons = validatePart(weight, color, length);
-  const status = reasons.length === 0 ? "Aprovada" : "Reprovada";
+  const part = createPart(id, weight, color, length);
 
-  const part = { id, weight, color, length, reasons, status };
-  registeredParts.push(part);
-
-  if (status === "Aprovada") {
+if (part.status === "Aprovada") {
     addToBox(part);
     console.log(`✔ Peça ${id} aprovada e adicionada.`);
   } else {
     console.log(`✘ ATENÇÃO! Peça ${id} não passou no teste de qualidade.`);
     console.log("Nem todos os requisitos de qualidade foram alcançados:");
-    for (const reason of reasons) {
+    for (const reason of part.reasons) {
       console.log(`- ${reason}`);
     }
   }
@@ -146,19 +121,15 @@ function listParts() {
   }
 }
 
-async function removePart() {
+async function askRemovePart() {
   const id = (await rl.question("Digite o ID da peça que você deseja remover: ")).trim();
-  const index = registeredParts.findIndex((part) => part.id === id);
 
-// Quando não encontra
-  if (index === -1) {
+  if (!removePart(id)) {
     console.log(`Peça ID ${id} não encontrada.`);
     return;
   }
 
-  registeredParts.splice(index, 1); // remove 1 item na posição encontrada
   reorganizeBoxes();
-
   console.log(`Peça ID ${id} removida com sucesso!`);
   console.log(`Caixas reorganizadas após a remoção da peça ${id}.`);
 }
@@ -210,7 +181,7 @@ function generateReport() {
 const OPTIONS = {
   "1": registerPart,
   "2": listParts,
-  "3": removePart,
+  "3": askRemovePart,
   "4": listBoxes,
   "5": generateReport,
 };
