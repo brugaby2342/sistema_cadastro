@@ -18,6 +18,6 @@ export function generateReport() {
       reasonCounter[reasonType] = (reasonCounter[reasonType] || 0) + 1;
     }
   }
-}
-
+  
   return { total, approved, rejected, usedBoxes, reasonCounter };
+}

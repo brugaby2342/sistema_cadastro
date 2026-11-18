@@ -2,9 +2,9 @@
   "name": "sistema_cadastro",
   "version": "1.0.0",
   "description": "Sistema de Controle de Produção e Qualidade de Peças em JavaScript",
-  "main": "script.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node script.js"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
   "author": "Bruna Gabriela Ribeiro Sartor",
   "license": "ISC",
   "type": "module",
-  "bugs": {
+  "bugs": { 
     "url": "https://github.com/brugaby2342/sistema_cadastro/issues"
   },
   "homepage": "https://github.com/brugaby2342/sistema_cadastro#readme"

@@ -1,23 +1,23 @@
 
-// Sistema de Controle de Produção e Qualidade de Peças
+// Interação com o usuário: menu, leitura do teclado e mensagens na tela.
 
 import readline from "node:readline/promises"
 import { stdin as input, stdout as output } from "node:process"
 
-import { BOX_CAPACITY } from "./src/config.js";
+import { BOX_CAPACITY } from "./config.js";
 import {
   registeredParts,
   partExists,
   createPart,
   removePart,
-} from "./src/parts.js";
+} from "./parts.js";
 import {
   closedBoxes,
   currentBox,
   addToBox,
   reorganizeBoxes,
-} from "./src/boxes.js";
-import { generateReport } from "./src/report.js";
+} from "./boxes.js";
+import { generateReport } from "./report.js";
 
 // ---------- Entrada do menu ----------
 
@@ -152,7 +152,7 @@ const OPTIONS = {
   "5": showReport,
 };
 
-async function main() {
+export async function main() {
   while (true) {
     showMenu();
     const option = (await rl.question("Selecione uma das seguintes opções: ")).trim();
@@ -172,5 +172,3 @@ async function main() {
 
   rl.close();
 }
-
-main();
