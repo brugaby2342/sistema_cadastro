@@ -11,6 +11,7 @@ import {
 
 export const registeredParts = []; // peças aprovadas e reprovadas
 
+// Validar peça
 export function validatePart(weight, color, length) {
   const reasons = [];
 
@@ -27,10 +28,12 @@ export function validatePart(weight, color, length) {
   return reasons;
 }
 
+// Identificar ID existente
 export function partExists(id) {
   return registeredParts.some((part) => part.id === id);
 }
 
+// Peça cadastrada 
 export function createPart(id, weight, color, length) {
   const reasons = validatePart(weight, color, length);
   const status = reasons.length === 0 ? "Aprovada" : "Reprovada";
@@ -41,6 +44,7 @@ export function createPart(id, weight, color, length) {
   return part;
 }
 
+// Remover peça
 export function removePart(id) {
   const index = registeredParts.findIndex((part) => part.id === id);
 

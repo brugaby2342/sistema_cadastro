@@ -1,10 +1,8 @@
 
 // Sistema de Controle de Produção e Qualidade de Peças
-// Versão base: todo o código em um único arquivo.
 
 import readline from "node:readline/promises"
 import { stdin as input, stdout as output } from "node:process"
-
 
 import { BOX_CAPACITY } from "./src/config.js";
 import {
@@ -13,11 +11,12 @@ import {
   createPart,
   removePart,
 } from "./src/parts.js";
-
-// ---------- Estado do sistema (em memória) ----------
-
-const closedBoxes = [] // caixas já fechadas (cada caixa é um array 10 peças )
-let currentBox = [] // caixa em aberto
+import {
+  closedBoxes,
+  currentBox,
+  addToBox,
+  reorganizeBoxes,
+} from "./src/boxes.js";
 
 // ---------- Entrada do menu ----------
 
@@ -36,30 +35,6 @@ async function askNumber(question) {
   }
 }
 
-// Adiciona peça na caixa atualmente aberta, fecha se estiver cheia e abre nova.
-function addToBox(part) {
-  currentBox.push(part);
-
-  if (currentBox.length === BOX_CAPACITY) {
-    // spread: cria um array novo e independente, com as mesmas referências de peças. Arquiva.
-    closedBoxes.push([...currentBox]);
-    // a caixa antiga é descartada; currentBox aponta para uma nova e vazia.
-    currentBox = [];
-  }
-}
-
-// Quando uma peça é removida, as caixas ficam com um buraco no meio. Esvazia todas as caixas e redistribui as peças aprovadas, na ordem de cadastro.
-function reorganizeBoxes() {
-  closedBoxes.length = 0; // esvazia o array
-  currentBox = [];
-
-  for (const part of registeredParts) { // itera na ordem de inserção
-    if (part.status === "Aprovada") {
-      addToBox(part);
-    }
-  }
-}
-
 // ---------- Opções do menu ----------
 
 function showMenu() {
@@ -67,7 +42,7 @@ function showMenu() {
   console.log("1 - Cadastrar peça");
   console.log("2 - Listar peças");
   console.log("3 - Remover peça");
-  console.log("4 - Listar caixas fechadas");
+  console.log("4 - Listar caixas");
   console.log("5 - Gerar relatório final");
   console.log("0 - Sair");
 }
