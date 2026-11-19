@@ -1,5 +1,7 @@
 # 🏭 Sistema de Controle de Produção e Qualidade de Peças
 
+<img alt="painel" src="./assets/code-pecas.png" />
+
 Sistema em **JavaScript (Node.js)** para controle de qualidade e empacotamento de peças em uma linha de montagem industrial.
 
 Reescrita em JavaScript de um protótipo desenvolvido originalmente em Python para a disciplina **Algoritmos e Lógica de Programação**</br>
@@ -265,7 +267,7 @@ sistema_cadastro/
 ├── README.md
 ├── arquitetura.md   # planejamento antes do desenvolvimento do projeto
 └── src/
-    ├── index.js     # ponto de entrada do programa
+    ├── main.js     # ponto de entrada do programa
     ├── menu.js      # interação com o usuário (menu, teclado e mensagens)
     ├── config.js    # constantes: critérios de qualidade e capacidade da caixa
     ├── parts.js     # regras de negócio das peças
@@ -319,8 +321,9 @@ Template strings para formatação de mensagens.
 
 ---
 
-## 📄 Licença
+## 📝 Licença e Uso
 
+Este projeto está sob a **Licença ISC**
 Uso livre para estudo e referência.
 
 Feito por Bruna Gabriela Ribeiro Sartor</br>

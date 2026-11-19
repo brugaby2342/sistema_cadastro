@@ -2,9 +2,9 @@
   "name": "sistema_cadastro",
   "version": "1.0.0",
   "description": "Sistema de Controle de Produção e Qualidade de Peças em JavaScript",
-  "main": "src/index.js",
+  "main": "src/main.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/main.js"
   },
   "repository": {
     "type": "git",

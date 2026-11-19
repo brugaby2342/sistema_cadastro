@@ -99,7 +99,7 @@ sistema_cadastro/
 sistema_cadastro/
 ├── `package.json`
 └── src/
-    ├── `index.js`       ← principal: só chama o menu
+    ├── `main.js`       ← principal: só chama o menu
     ├── `menu.js`        ← menu e interação com o usuário
     ├── `config.js`      ← constantes
     ├── `pecas.js`       ← regras das peças
