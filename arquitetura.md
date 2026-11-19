@@ -90,38 +90,26 @@ Peça e Caixa.
 O desenvolvimento será feito em duas etapas:
 1. **Versão base:** todo o código em um único arquivo (`script.js`), com foco em reproduzir a lógica do sistema original.
 
+```
 sistema_cadastro/
 ├── `package.json`
-└── `script.js`      ← principal: menu + regras, tudo junto
+└── `script.js`      ← principal: menu + regras em um só arquivo
+```
 
 2. **Refatoração:** divisão do código em arquivos separados, isolando a lógica de negócio (validação, caixas e relatório) da interação com o usuário (menu, leitura do teclado e exibição de mensagens), para permitir a evolução futura do sistema para API e front-end sem reescrever as regras.
 
+```
 sistema_cadastro/
 ├── `package.json`
 └── src/
-    ├── `main.js`       ← principal: só chama o menu
+    ├── `main.js`        ← principal: só chama o menu
     ├── `menu.js`        ← menu e interação com o usuário
     ├── `config.js`      ← constantes
     ├── `pecas.js`       ← regras das peças
     ├── `caixas.js`      ← regras das caixas
     └── `relatorio.js`   ← relatório
-
-
-
-
-
+```
 
 </br>
 </br>
 </br>
-</br>
-</br>
-</br>
-
-*Casos a decidir antes de programar:*
-
-*Pode haver ID repetido?*
-*Há algum campo opcional?*
-*O ID pode ficar vazio?*
-
-*Se o ID não existir, o sistema deve informar que a peça não foi encontrada.*
