@@ -1,6 +1,6 @@
 # 🏭 Sistema de Controle de Produção e Qualidade de Peças
 
-<img alt="painel" src="./assets/code-pecas.png" />
+<p align="center"><img width="400" height="450" alt="painel" src="./assets/code-pecas.png" />
 
 Sistema em **JavaScript (Node.js)** para controle de qualidade e empacotamento de peças em uma linha de montagem industrial.
 
